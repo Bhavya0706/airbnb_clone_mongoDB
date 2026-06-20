@@ -1,26 +1,28 @@
 const mongo = require('mongodb');
 
-const  Mongoclient = mongo.MongoClient;
+const MongoClient = mongo.MongoClient;
 
-const mongo_url = "mongodb+srv://bhavya:bh%40vy%40@bhavya.g1kwbuj.mongodb.net/?appName=bhavya";
+const mongo_url = process.env.MONGO_URI;
 
 let _db;
-const mongoconnect = (callback)=>{
 
-    Mongoclient.connect(mongo_url).then(client =>{
-       
-        callback();
-        _db = client.db('airbnbb');
-    }).catch(err =>{
-        console.log(err);
+const mongoconnect = (callback) => {
+  MongoClient.connect(mongo_url)
+    .then((client) => {
+      _db = client.db('airbnbb');
+      callback();
     })
-}
-const getdb =()=>{
-    if(!_db){
-      throw new Error("database not connected yet")
-    }else{
-        return _db;
-    }
-}
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const getdb = () => {
+  if (!_db) {
+    throw new Error('Database not connected yet');
+  }
+  return _db;
+};
+
 exports.getdb = getdb;
 exports.mongoconnect = mongoconnect;
